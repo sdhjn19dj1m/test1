@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  nim_microservices:
+    build: .
+    container_name: nim_microservices
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    command: python src/nim_microservices.py
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    runtime: nvidia
+
+  tensorrt_llm:
+    build: .
+    container_name: tensorrt_llm
+    volumes:
+      - .:/app
+    command: python src/tensorrt_llm_inference.py
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    runtime: nvidia
+
+x-nvidia-gpu: &gpu
+  runtime: nvidia
+  environment:
+    - NVIDIA_VISIBLE_DEVICES=all
+
